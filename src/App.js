@@ -19,6 +19,7 @@ class App extends React.Component {
     this.createList = this.createList.bind(this);
     this.handleClickPrev = this.handleClickPrev.bind(this);
     this.handleClickNext = this.handleClickNext.bind(this);
+    this.handleClickAdd = this.handleClickAdd.bind(this);
   }
 
   createList() {
@@ -26,6 +27,24 @@ class App extends React.Component {
     return (
       <List
         list={currentList}
+      />
+    )
+  }
+
+  createHead() {
+    const date = new Date(Date.now() + this.state.currentDay * 24 * 3600 * 1000);
+    let dayRelativelyToday = undefined;
+
+    if (this.state.currentDay === 0) {
+      dayRelativelyToday = 'Today';
+    } else if (this.state.currentDay === 1) {
+      dayRelativelyToday = 'Tomorrow';
+    }
+
+    return (
+      <Head
+        date={date}
+        dayRelativelyToday={dayRelativelyToday}
       />
     )
   }
@@ -46,15 +65,23 @@ class App extends React.Component {
     })
   }
 
+  handleClickAdd() {
+
+  }
+
   render() {
+    const head = this.createHead();
+    const list = this.createList();
+
     return (
       <div>
         <div>
-          <button>previous</button>
-          <Head/>
-          <button>next</button>
+          <button onClick={this.handleClickPrev}>Previous</button>
+          {head}
+          <button onClick={this.handleClickNext}>Next</button>
+          <button>Add</button>
+          {list}
         </div>
-        <List/>
       </div>
     )
   }
