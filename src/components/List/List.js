@@ -1,8 +1,6 @@
 import React from "react";
 import Task from "../Task/Task";
 
-import Task from "../Task/Task";
-
 class List extends React.Component {
   render() {
     let tasks = 'No tasks';
