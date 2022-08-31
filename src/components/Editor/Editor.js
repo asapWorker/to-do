@@ -69,7 +69,6 @@ class Editor extends React.Component {
       content: this.state.text,
       importance: this.state.importance,
       isFromYesterday: existedTask?.isFromYesterday,
-      listIndex: existedTask?.listIndex,
     }
 
     this.props.handleEditingFinish(task, (this.props.existedTask));
