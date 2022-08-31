@@ -51,7 +51,7 @@ class App extends React.Component {
     const currentList = this.state.schedules[this.state.currentDay];
     return (
       <List
-        list={currentList}
+        list={currentList ? Array.from(currentList.values()) : null}
         handleEditingStart={this.handleEditingStart}
       />
     )
@@ -104,17 +104,11 @@ class App extends React.Component {
     this.setState((state, props) => {
       let currentDaySchedule = state.schedules[state.currentDay];
       if (!currentDaySchedule) {
-        currentDaySchedule = [];
+        currentDaySchedule = new Map();
       } else {
-        currentDaySchedule = currentDaySchedule.slice();
+        currentDaySchedule = new Map(currentDaySchedule);
       }
-
-      if (isExistedTask) {
-        currentDaySchedule[task.listIndex] = task;
-      } else {
-        task.listIndex = currentDaySchedule.length;
-        currentDaySchedule.push(task);
-      }
+      currentDaySchedule.set(task.id, task);
 
       const schedules = state.schedules.slice();
       schedules[state.currentDay] = currentDaySchedule;
