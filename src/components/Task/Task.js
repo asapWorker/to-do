@@ -11,7 +11,7 @@ class Task extends React.Component {
         <span className={importance + ' ' + dayStatusName}>
           {content}
         </span>
-        <button className='edit-btn'>
+        <button className='edit-btn' onClick={() => {this.props.handleEditingStart(this.props.taskObj)}}>
           edit
         </button>
       </div>

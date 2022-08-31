@@ -3,6 +3,7 @@ import './App.css';
 
 import Head from "./components/Head/Head";
 import List from "./components/List/List";
+import Editor from "./components/Editor/Editor";
 
 //days constants
 const FIRST_DAY = 0;
@@ -15,22 +16,19 @@ class App extends React.Component {
     this.state = {
       schedules: new Array(DAYS_C).fill(null),
       currentDay: FIRST_DAY,
+      mode: 'reading',
+      taskIsBeingEdit: null,
     }
-    this.createList = this.createList.bind(this);
+
     this.handleClickPrev = this.handleClickPrev.bind(this);
     this.handleClickNext = this.handleClickNext.bind(this);
+    this.handleEditingStart = this.handleEditingStart.bind(this);
     this.handleClickAdd = this.handleClickAdd.bind(this);
+    this.handleEditingFinish = this.handleEditingFinish.bind(this);
   }
 
-  createList() {
-    const currentList = this.state.schedules[this.state.currentDay];
-    return (
-      <List
-        list={currentList}
-      />
-    )
-  }
-
+  /*create elements
+  ------------------------------------*/
   createHead() {
     const date = new Date(Date.now() + this.state.currentDay * 24 * 3600 * 1000);
     let dayRelativelyToday = undefined;
@@ -49,6 +47,30 @@ class App extends React.Component {
     )
   }
 
+  createList() {
+    const currentList = this.state.schedules[this.state.currentDay];
+    return (
+      <List
+        list={currentList}
+        handleEditingStart={this.handleEditingStart}
+      />
+    )
+  }
+
+  createEditor() {
+    return (
+      <Editor
+        handleEditingFinish={this.handleEditingFinish}
+        existedTask={this.state.taskIsBeingEdit}
+      />
+    )
+  }
+  /*-----------------------------------*/
+
+
+
+  /*buttons' events handlers
+  -------------------------------------*/
   handleClickPrev() {
     this.setState((state, props) => {
       if (state.currentDay !== FIRST_DAY) {
@@ -66,21 +88,59 @@ class App extends React.Component {
   }
 
   handleClickAdd() {
+    this.handleEditingStart();
+  }
+  /*-----------------------------------*/
 
+
+  handleEditingStart(task = null) {
+    this.setState({
+      mode: 'editing',
+      taskIsBeingEdit: task,
+    })
   }
 
+  handleEditingFinish(task, isExistedTask = false) {
+    this.setState((state, props) => {
+      let currentDaySchedule = state.schedules[state.currentDay];
+      if (!currentDaySchedule) {
+        currentDaySchedule = [];
+      } else {
+        currentDaySchedule = currentDaySchedule.slice();
+      }
+
+      if (isExistedTask) {
+        currentDaySchedule[task.listIndex] = task;
+      } else {
+        task.listIndex = currentDaySchedule.length;
+        currentDaySchedule.push(task);
+      }
+
+      const schedules = state.schedules.slice();
+      schedules[state.currentDay] = currentDaySchedule;
+
+      return {
+        schedules: schedules,
+        mode: 'reading',
+      }
+    })
+  }
+
+
   render() {
-    const head = this.createHead();
-    const list = this.createList();
+    const Head = this.createHead();
+    const List = this.createList();
+    const Editor = this.createEditor();
 
     return (
       <div>
         <div>
           <button onClick={this.handleClickPrev}>Previous</button>
-          {head}
+          {Head}
           <button onClick={this.handleClickNext}>Next</button>
-          <button>Add</button>
-          {list}
+          <button onClick={this.handleClickAdd}>Add</button>
+          {List}
+          {(this.state.mode === 'reading') ? null : Editor}
         </div>
       </div>
     )

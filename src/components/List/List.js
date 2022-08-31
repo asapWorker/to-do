@@ -8,8 +8,9 @@ class List extends React.Component {
       tasks = this.props.list.map((task) => {
         return (
           <Task
-            key={task.key}
-            taskObj={task.obj}
+            key={task.id}
+            taskObj={task}
+            handleEditingStart={this.props.handleEditingStart}
           />
         )
       })

@@ -4,9 +4,8 @@ class Editor extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      text: '',
-      importance: 'less',
-      key: undefined,
+      text: (this.props.existedTask) ? this.props.existedTask.content : '',
+      importance: (this.props.existedTask) ? this.props.existedTask.importance : 'less',
     }
 
     this.createImportanceChoice = this.createImportanceChoice.bind(this);
@@ -14,6 +13,8 @@ class Editor extends React.Component {
     this.handleClickCommit = this.handleClickCommit.bind(this);
   }
 
+  /*create radio buttons for choosing importance of tasks
+  ---------------------------------------------*/
   createImportanceChoice() {
     const name = 'importance';
     const importanceValues = ["less", "middle", "very"];
@@ -37,7 +38,11 @@ class Editor extends React.Component {
     </div>
     )
   }
+  /*------------------------------------------*/
 
+
+  /*elements' actions handlers
+  ----------------------------------------------*/
   handleChange(event) {
     const elemName = event.target.name;
 
@@ -57,10 +62,19 @@ class Editor extends React.Component {
   }
 
   handleClickCommit() {
-    this.setState({
-      key: Date.now(),
-    })
+    const existedTask = this.props.existedTask;
+
+    const task = {
+      id: (existedTask) ? existedTask.id : Date.now(),
+      content: this.state.text,
+      importance: this.state.importance,
+      isFromYesterday: existedTask?.isFromYesterday,
+      listIndex: existedTask?.listIndex,
+    }
+
+    this.props.handleEditingFinish(task, (this.props.existedTask));
   }
+  /*--------------------------------------------*/
 
   render() {
     return (
