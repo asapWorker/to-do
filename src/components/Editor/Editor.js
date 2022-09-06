@@ -1,39 +1,48 @@
 import React from "react";
+import "./Editor.css"
+
+import {IMPORTANCE_OPTIONS} from "../../constants";
 
 class Editor extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       text: (this.props.existedTask) ? this.props.existedTask.content : '',
-      importance: (this.props.existedTask) ? this.props.existedTask.importance : 'less',
+      isError: false,
+      importance: (this.props.existedTask) ? this.props.existedTask.importance : IMPORTANCE_OPTIONS[0],
     }
 
     this.createImportanceChoice = this.createImportanceChoice.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleClickCommit = this.handleClickCommit.bind(this);
+
+    this.textareaField = React.createRef();
   }
 
   /*create radio buttons for choosing importance of tasks
   ---------------------------------------------*/
   createImportanceChoice() {
     const name = 'importance';
-    const importanceValues = ["less", "middle", "very"];
+    let importanceElements = IMPORTANCE_OPTIONS.slice();
 
-    const importanceElements = importanceValues.map((val) => {
+    importanceElements = importanceElements.map((val) => {
       return (
-        <input
-          key={val}
-          type="radio"
-          name={name}
-          value={val}
-          checked={val === this.state.importance}
-          onChange={this.handleChange}
-        />
+        <React.Fragment key={val}>
+          <input
+            type="radio"
+            name={name}
+            value={val}
+            checked={val === this.state.importance}
+            onChange={this.handleChange}
+            id={val}
+          />
+          <label htmlFor={val} className={name + ' ' + val}></label>
+        </React.Fragment>
       )
     });
 
     return (
-    <div>
+    <div className="editor-importance">
       {importanceElements}
     </div>
     )
@@ -47,21 +56,26 @@ class Editor extends React.Component {
     const elemName = event.target.name;
 
     if (elemName === 'textarea') {
-      this.setState((state, props) => {
-        return {
-          text: event.target.value,
-        }
+      this.setState({
+        text: event.target.value,
       })
     } else if (elemName === "importance") {
-      this.setState((state, props) => {
-        return {
-          importance: event.target.value,
-        }
+      this.setState({
+        importance: event.target.value,
       })
     }
   }
 
-  handleClickCommit() {
+  handleClickCommit(event) {
+    event.preventDefault();
+
+    if (this.state.text === '') {
+      this.setState({
+        isError: true,
+      });
+      this.textareaField.current.focus();
+      return;
+    }
     const existedTask = this.props.existedTask;
 
     const task = {
@@ -71,28 +85,39 @@ class Editor extends React.Component {
       isFromYesterday: existedTask?.isFromYesterday,
     }
 
-    this.props.handleEditingFinish(task, (this.props.existedTask));
+    this.props.handleEditingFinish(task);
   }
   /*--------------------------------------------*/
 
   render() {
+    const ImportanceChoice = this.createImportanceChoice();
+
     return (
-      <div>
-        <textarea
+      <form className="editor" onSubmit={this.handleClickCommit}>
+        <input
+          type="text"
+          className={"editor-text-input" + ((this.state.isError) ? " errored" : "")}
           name="textarea"
-          id=""
-          cols="30" rows="10"
           onChange={this.handleChange}
           value={this.state.text}
+          ref={this.textareaField}
+          placeholder="Enter task"
         />
-        <div>
-          {this.createImportanceChoice()}
-          <button onClick={this.handleClickCommit}>
+        <div className="editor-interface">
+          {ImportanceChoice}
+          <button
+            type="submit"
+            className="editor-btn"
+          >
             Commit
           </button>
         </div>
-      </div>
+      </form>
     )
+  }
+
+  componentDidMount() {
+    this.textareaField.current.focus();
   }
 }
 

@@ -1,1 +1,161 @@
+/*app
+------------------------------*/
+.app {
+  position: relative;
+
+  height: 100vh;
+  width: 60%;
+  padding: 3vh 10px;
+  margin: auto;
+}
+
+.app-always-visible {
+  position: relative;
+
+  height: 100%;
+  min-height: 0;
+  padding: 0 10px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.app.editing .should-off {
+  pointer-events: none;
+}
+/*----------------------------*/
+
+
+
+/*header
+------------------------------*/
+.app-header {
+  width: 100%;
+  margin: 30px -10px;
+
+  flex-grow: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.head-wrapper {
+  width: 70%;
+}
+
+.days-change-btn {
+  border: none;
+  background-color: transparent;
+}
+
+.arrow {
+  width: 5vmin;
+  height: 5vmin;
+
+  fill: #d0d3d3;
+}
+/*-----------------------------*/
+
+
+
+/*list wrapper*/
+.list-wrapper {
+  width: 70%;
+  min-height: 0;
+  margin: 30px -10px;
+
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+
+
+/*add button
+------------------------------*/
+.add-btn-wrapper {
+  width: 70%;
+  margin: 30px -10px;
+
+  flex-grow: 0;
+}
+
+.add-btn {
+  width: 100%;
+  padding: 1.5% 0;
+  border: none;
+  border-radius: 1vmin/1vmin;
+
+  background-color: #8783c2;
+
+  font-size: 1.5em;
+  letter-spacing: 2px;
+  color: #fff;
+}
+/*-----------------------------*/
+
+
+/*editor wrapper*/
+.editor-wrapper {
+  width: 80%;
+  height: 40%;
+  margin: auto;
+
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+
+
+/*media
+-------------------------------*/
+@media screen and (max-width: 1919px) {
+  .app {
+    width: 70%;
+  }
+}
+
+@media screen and (max-width: 1279px){
+  .app {
+    width: 80%;
+  }
+
+  .head-wrapper {
+    width: 80%;
+  }
+
+  .list-wrapper {
+    width: 80%;
+  }
+
+  .editor-wrapper {
+    width: 90%;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .app {
+    width: 100%;
+  }
+
+  .head-wrapper {
+    width: 100%;
+  }
+
+  .list-wrapper {
+    width: 90%;
+  }
+
+  .editor-wrapper {
+    width: 96%;
+    height: 70%;
+  }
+}
+/*-------------------------------*/
+
+
+
 

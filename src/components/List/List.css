@@ -1,0 +1,15 @@
+.no-tasks {
+  text-align: center;
+  color: #8c8d8d;
+}
+
+.list {
+  padding-bottom: 7%;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+}

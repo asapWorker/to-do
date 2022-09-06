@@ -1,0 +1,27 @@
+.title {
+  padding: 1.5% 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #008f83;
+}
+
+.day-relatively-today {
+  font-size: 1.2em;
+}
+
+.month {
+  margin-left: 2%;
+
+  font-size: 1.8em;
+  font-weight: bold;
+  color: #6963b4;
+}
+
+.weekday {
+  font-size: 1.1em;
+
+  margin-left: 2%;
+}
+

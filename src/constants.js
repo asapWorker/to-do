@@ -4,6 +4,7 @@ export const FIRST_DAY = 0;
 export const LAST_DAY = 6;
 export const DAYS_C = 7;
 
+
 //task importance options
 //App.js, Editor.js
 export const IMPORTANCE_OPTIONS = ["less", "middle", "very"];
@@ -13,3 +14,6 @@ export const IMPORTANCE = {
   middle: 1,
   very: 2,
 }
+
+
+

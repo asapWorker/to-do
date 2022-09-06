@@ -1,14 +1,13 @@
 import React from "react";
+
 import './App.css';
 
-import Head from "./components/Head/Head";
+import {ReactComponent as ArrowRight} from "./icons/arrow-right.svg";
+
+import Title from "./components/Title/Title.js";
 import List from "./components/List/List";
 import Editor from "./components/Editor/Editor";
-
-//days constants
-const FIRST_DAY = 0;
-const LAST_DAY = 6;
-const DAYS_C = 7;
+import {FIRST_DAY, LAST_DAY, DAYS_C, IMPORTANCE} from "./constants";
 
 class App extends React.Component {
   constructor(props) {
@@ -25,6 +24,7 @@ class App extends React.Component {
     this.handleEditingStart = this.handleEditingStart.bind(this);
     this.handleClickAdd = this.handleClickAdd.bind(this);
     this.handleEditingFinish = this.handleEditingFinish.bind(this);
+    this.deleteTask = this.deleteTask.bind(this);
   }
 
   /*create elements
@@ -40,7 +40,7 @@ class App extends React.Component {
     }
 
     return (
-      <Head
+      <Title
         date={date}
         dayRelativelyToday={dayRelativelyToday}
       />
@@ -53,6 +53,7 @@ class App extends React.Component {
       <List
         list={currentList ? Array.from(currentList.values()) : null}
         handleEditingStart={this.handleEditingStart}
+        deleteTask={this.deleteTask}
       />
     )
   }
@@ -65,6 +66,23 @@ class App extends React.Component {
       />
     )
   }
+
+  createArrow(directionIsLeft) {
+    if (!directionIsLeft) {
+      return (
+        <ArrowRight
+          className="arrow"
+        />
+      )
+    } else {
+      return (
+        <ArrowRight
+          className="arrow"
+          transform="rotate(180)"
+        />
+      )
+    }
+  }
   /*-----------------------------------*/
 
 
@@ -72,7 +90,7 @@ class App extends React.Component {
   /*buttons' events handlers
   -------------------------------------*/
   handleClickPrev() {
-    this.setState((state, props) => {
+    this.setState((state) => {
       if (state.currentDay !== FIRST_DAY) {
         return {currentDay: state.currentDay - 1};
       }
@@ -80,7 +98,7 @@ class App extends React.Component {
   }
 
   handleClickNext() {
-    this.setState((state, props) => {
+    this.setState((state) => {
       if (state.currentDay !== LAST_DAY) {
         return {currentDay: state.currentDay + 1};
       }
@@ -93,6 +111,8 @@ class App extends React.Component {
   /*-----------------------------------*/
 
 
+  /*editing start and finish action handlers
+  --------------------------------------*/
   handleEditingStart(task = null) {
     this.setState({
       mode: 'editing',
@@ -100,18 +120,19 @@ class App extends React.Component {
     })
   }
 
-  handleEditingFinish(task, isExistedTask = false) {
-    this.setState((state, props) => {
-      let currentDaySchedule = state.schedules[state.currentDay];
+  handleEditingFinish(task) {
+    this.setState((state) => {
+      const schedules = state.schedules.slice();
+
+      let currentDaySchedule = schedules[state.currentDay];
       if (!currentDaySchedule) {
         currentDaySchedule = new Map();
       } else {
-        currentDaySchedule = new Map(currentDaySchedule);
+        currentDaySchedule = new Map(currentDaySchedule.entries());
       }
       currentDaySchedule.set(task.id, task);
 
-      const schedules = state.schedules.slice();
-      schedules[state.currentDay] = currentDaySchedule;
+      schedules[state.currentDay] = this.sortTasks(currentDaySchedule);
 
       return {
         schedules: schedules,
@@ -119,24 +140,90 @@ class App extends React.Component {
       }
     })
   }
+  /*----------------------------------------*/
+
+
+  deleteTask(taskId) {
+    this.setState((state) => {
+      const schedules = state.schedules.slice();
+
+      const currentDaySchedule = new Map(schedules[state.currentDay].entries());
+      currentDaySchedule.delete(taskId);
+
+      schedules[state.currentDay] = (!currentDaySchedule.size) ? null : currentDaySchedule;
+
+      return {
+        schedules: schedules,
+      }
+    })
+  }
+
+  sortTasks(tasksMap) {
+    const tasksArr = Array.from(tasksMap.entries());
+    tasksArr.sort(compare);
+    return new Map(tasksArr);
+
+    function compare(task1, task2) {
+      task1 = task1[1];
+      task2 = task2[1];
+
+      if (task1.isFromYesterday !== task2.isFromYesterday) {
+        return (task2.isFromYesterday);
+      } else if (task1.importance !== task2.importance) {
+        const task1Importance = IMPORTANCE[task1.importance];
+        const task2Importance = IMPORTANCE[task2.importance];
+        return (task2Importance - task1Importance);
+      } else {
+        return (task1.id - task2.id);
+      }
+    }
+  }
 
 
   render() {
     const Head = this.createHead();
     const List = this.createList();
     const Editor = this.createEditor();
+    const LeftArrow = this.createArrow(true);
+    const RightArrow = this.createArrow(false);
 
     return (
-      <div>
-        <div>
-          <button onClick={this.handleClickPrev}>Previous</button>
-          {Head}
-          <button onClick={this.handleClickNext}>Next</button>
-          <button onClick={this.handleClickAdd}>Add</button>
-          {List}
-          {(this.state.mode === 'reading') ? null : Editor}
+        <div className={"app " + this.state.mode}>
+          <div className={"app-always-visible"}>
+
+            <div className="app-header">
+
+              <button className="days-change-btn should-off" onClick={this.handleClickPrev}>
+                {LeftArrow}
+              </button>
+
+              <div className="head-wrapper">
+                {Head}
+              </div>
+
+              <button className="days-change-btn should-off" onClick={this.handleClickNext}>
+                {RightArrow}
+              </button>
+
+            </div>
+
+            <div className="list-wrapper">
+              {List}
+            </div>
+
+            <div className="add-btn-wrapper">
+              <button className="add-btn should-off" onClick={this.handleClickAdd}>Add</button>
+            </div>
+
+          </div>
+
+          {(this.state.mode === 'reading') ? null :
+            <div className="editor-wrapper">
+              {Editor}
+            </div>
+          }
+
         </div>
-      </div>
     )
   }
 }

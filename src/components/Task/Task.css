@@ -1,0 +1,82 @@
+/*task*/
+.task {
+  height: 5vh;
+  border: 1px solid #4e4acc;
+  border-radius: 1vh/1vh;
+  margin: 1% 2%;
+
+  position: relative;
+}
+
+.task.less {
+  border-color: #24c200;
+}
+
+.task.middle {
+  border-color: #ff9100;
+}
+
+.task.very {
+  border-color: #fc00a3;
+}
+
+.checkbox {
+  height: 3vmin;
+  width: 3vmin;
+
+  position: absolute;
+  top: 50%;
+  left: 3%;
+  transform: translateY(-50%);
+}
+
+
+/*content
+----------------------------*/
+.content {
+  position: absolute;
+  left: calc(6% + 3vmin);
+  right: 23%;
+  top: 50%;
+  transform: translateY(-50%);
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.content.line-through {
+  text-decoration: line-through;
+}
+/*----------------------------*/
+
+
+/*edit button
+------------------------------*/
+.edit-btn {
+  height: 100%;
+  width: 20%;
+  border: none;
+  border-top-right-radius: 1vmin 1vmin;
+  border-bottom-right-radius: 1vmin 1vmin;
+
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+
+  letter-spacing: 2px;
+  color: #fff;
+}
+
+.task.less > .edit-btn {
+  background-color: #24c200;
+}
+
+.task.middle > .edit-btn {
+  background-color: #ff9100;
+}
+
+.task.very > .edit-btn{
+  background-color: #fc00a3;
+}
+/*-------------------------------*/
