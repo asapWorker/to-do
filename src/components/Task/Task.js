@@ -1,7 +1,7 @@
 import React from "react";
 import "./Task.css"
 
-class Task extends React.Component {
+class Task extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {

@@ -2,13 +2,15 @@ import React from "react";
 import "./List.css"
 import Task from "../Task/Task";
 
-class List extends React.Component {
+class List extends React.PureComponent {
   render() {
     let tasks = 'No tasks';
     let listClass = 'no-tasks';
 
     if (this.props.list) {
-      tasks = this.props.list.map((task) => {
+      tasks = Array.from(this.props.list.values());
+
+      tasks = tasks.map((task) => {
         return (
           <Task
             key={task.id}

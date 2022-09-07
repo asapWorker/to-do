@@ -16,7 +16,6 @@ class App extends React.Component {
       schedules: new Array(DAYS_C).fill(null),
       currentDay: FIRST_DAY,
       mode: 'reading',
-      taskIsBeingEdit: null,
     }
 
     this.handleClickPrev = this.handleClickPrev.bind(this);
@@ -51,7 +50,7 @@ class App extends React.Component {
     const currentList = this.state.schedules[this.state.currentDay];
     return (
       <List
-        list={currentList ? Array.from(currentList.values()) : null}
+        list={currentList}
         handleEditingStart={this.handleEditingStart}
         deleteTask={this.deleteTask}
       />
